@@ -2,6 +2,7 @@ BUILD_DIR = build
 TARGET := stm32l053r8tx
 RTT_ADDR := 0x20000028
 BUILD_TYPE := Debug
+PROJ_NAME := Cooling_DAQ
 
 all:
 	mkdir -p $(BUILD_DIR)
@@ -13,7 +14,7 @@ clean:
 	rm -rf $(BUILD_DIR)
 
 flash:
-	@-pyocd flash -t $(TARGET) $(BUILD_DIR)/Cooling_DAQ.elf
+	@-pyocd flash -t $(TARGET) $(BUILD_DIR)/$(PROJ_NAME).elf
 
 monitor:
 	@-pyocd rtt -t $(TARGET) -a $(RTT_ADDR) 
