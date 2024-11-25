@@ -58,3 +58,4 @@ build/
 .cache/
 .ccls-cache
 cmake-*/
+.DS_Store

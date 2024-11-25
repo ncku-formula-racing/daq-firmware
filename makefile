@@ -13,7 +13,7 @@ clean:
 	rm -rf $(BUILD_DIR)
 
 flash:
-	@-pyocd flash -t $(TARGET) $(BUILD_DIR)/Test1124.elf
+	@-pyocd flash -t $(TARGET) $(BUILD_DIR)/Cooling_DAQ.elf
 
 monitor:
 	@-pyocd rtt -t $(TARGET) -a $(RTT_ADDR) 
