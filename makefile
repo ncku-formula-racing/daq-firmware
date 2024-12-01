@@ -1,6 +1,6 @@
 BUILD_DIR = build
 TARGET := stm32l053r8tx
-RTT_ADDR := 0x20000028
+RTT_ADDR := 0x20000000
 BUILD_TYPE := Debug
 PROJ_NAME := Cooling_DAQ
 
