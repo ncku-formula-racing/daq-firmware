@@ -68,9 +68,9 @@ static void MX_TIM21_Init(void);
 /* USER CODE END 0 */
 
 /**
-  * @brief  The application entry point.
-  * @retval int
-  */
+ * @brief  The application entry point.
+ * @retval int
+ */
 int main(void)
 {
 
@@ -85,7 +85,7 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
-  SEGGER_RTT_Init();
+
   /* USER CODE END Init */
 
   /* Configure the system clock */
@@ -102,10 +102,9 @@ int main(void)
   MX_USART2_UART_Init();
   MX_TIM21_Init();
   /* USER CODE BEGIN 2 */
-  HAL_Delay(500);
-  SEGGER_RTT_printf(0, "start\n");
   HAL_TIM_IC_Start_IT(&htim21, TIM_CHANNEL_1);
   HAL_TIM_IC_Start(&htim21, TIM_CHANNEL_1);
+  SEGGER_RTT_printf(0, "start\n");
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -114,52 +113,54 @@ int main(void)
   while (1)
   {
     HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
-    // HAL_ADC_Start(&hadc);
-    // HAL_ADC_PollForConversion(&hadc, 0x01);
-    // if (HAL_IS_BIT_SET(HAL_ADC_GetState(&hadc), HAL_ADC_STATE_REG_EOC))
-    // {
-    //   voltage[counter] = HAL_ADC_GetValue(&hadc);
-    //   voltage[counter] = voltage[counter] * 3300 / 4095;
-    //   SEGGER_RTT_printf(0, "voltage[%d]=%d\n", counter, voltage[counter]);
-    //   counter++;
-    // }
-    // HAL_ADC_PollForConversion(&hadc, 0x01);
-    // if (HAL_IS_BIT_SET(HAL_ADC_GetState(&hadc), HAL_ADC_STATE_REG_EOC))
-    // {
-    //   voltage[counter] = HAL_ADC_GetValue(&hadc);
-    //   voltage[counter] = voltage[counter] * 3300 / 4095;
-    //   SEGGER_RTT_printf(0, "voltage[%d]=%d\n", counter, voltage[counter]);
-    //   counter++;
-    // }
-    // HAL_ADC_PollForConversion(&hadc, 0x01);
-    // if (HAL_IS_BIT_SET(HAL_ADC_GetState(&hadc), HAL_ADC_STATE_REG_EOC))
-    // {
-    //   voltage[counter] = HAL_ADC_GetValue(&hadc);
-    //   voltage[counter] = voltage[counter] * 3300 / 4095;
-    //   SEGGER_RTT_printf(0, "voltage[%d]=%d\n", counter, voltage[counter]);
-    //   counter++;
-    // }
-    // HAL_ADC_PollForConversion(&hadc, 0x01);
-    // if (HAL_IS_BIT_SET(HAL_ADC_GetState(&hadc), HAL_ADC_STATE_REG_EOC))
-    // {
-    //   voltage[counter] = HAL_ADC_GetValue(&hadc);
-    //   voltage[counter] = voltage[counter] * 3300 / 4095;
-    //   SEGGER_RTT_printf(0, "voltage[%d]=%d\n", counter, voltage[counter]);
-    //   counter = 0;
-    // }
-    // SEGGER_RTT_printf(0, "\n");
     HAL_Delay(500);
+    /*HAL_ADC_Start(&hadc);
+    HAL_ADC_PollForConversion(&hadc, 0x01);
+    if (HAL_IS_BIT_SET(HAL_ADC_GetState(&hadc), HAL_ADC_STATE_REG_EOC))
+    {
+      voltage[counter] = HAL_ADC_GetValue(&hadc);
+      voltage[counter] = voltage[counter] * 3300 / 4095;
+      SEGGER_RTT_printf(0, "voltage[%d]=%d\n", counter, voltage[counter]);
+      counter++;
+    }
+    HAL_ADC_PollForConversion(&hadc, 0x01);
+    if (HAL_IS_BIT_SET(HAL_ADC_GetState(&hadc), HAL_ADC_STATE_REG_EOC))
+    {
+      voltage[counter] = HAL_ADC_GetValue(&hadc);
+      voltage[counter] = voltage[counter] * 3300 / 4095;
+      SEGGER_RTT_printf(0, "voltage[%d]=%d\n", counter, voltage[counter]);
+      counter++;
+    }
+    HAL_ADC_PollForConversion(&hadc, 0x01);
+    if (HAL_IS_BIT_SET(HAL_ADC_GetState(&hadc), HAL_ADC_STATE_REG_EOC))
+    {
+      voltage[counter] = HAL_ADC_GetValue(&hadc);
+      voltage[counter] = voltage[counter] * 3300 / 4095;
+      SEGGER_RTT_printf(0, "voltage[%d]=%d\n", counter, voltage[counter]);
+      counter++;
+    }
+    HAL_ADC_PollForConversion(&hadc, 0x01);
+    if (HAL_IS_BIT_SET(HAL_ADC_GetState(&hadc), HAL_ADC_STATE_REG_EOC))
+    {
+      voltage[counter] = HAL_ADC_GetValue(&hadc);
+      voltage[counter] = voltage[counter] * 3300 / 4095;
+      SEGGER_RTT_printf(0, "voltage[%d]=%d\n", counter, voltage[counter]);
+      counter = 0;
+    }
+    SEGGER_RTT_printf(0, "\n");
+    HAL_Delay(500);*/
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
   }
+
   /* USER CODE END 3 */
 }
 
 /**
-  * @brief System Clock Configuration
-  * @retval None
-  */
+ * @brief System Clock Configuration
+ * @retval None
+ */
 void SystemClock_Config(void)
 {
   RCC_OscInitTypeDef RCC_OscInitStruct = {0};
@@ -167,12 +168,12 @@ void SystemClock_Config(void)
   RCC_PeriphCLKInitTypeDef PeriphClkInit = {0};
 
   /** Configure the main internal regulator output voltage
-  */
+   */
   __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
 
   /** Initializes the RCC Oscillators according to the specified parameters
-  * in the RCC_OscInitTypeDef structure.
-  */
+   * in the RCC_OscInitTypeDef structure.
+   */
   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
   RCC_OscInitStruct.HSIState = RCC_HSI_ON;
   RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
@@ -186,9 +187,8 @@ void SystemClock_Config(void)
   }
 
   /** Initializes the CPU, AHB and APB buses clocks
-  */
-  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
-                              |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
+   */
+  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2;
   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
@@ -208,10 +208,10 @@ void SystemClock_Config(void)
 }
 
 /**
-  * @brief ADC Initialization Function
-  * @param None
-  * @retval None
-  */
+ * @brief ADC Initialization Function
+ * @param None
+ * @retval None
+ */
 static void MX_ADC_Init(void)
 {
 
@@ -226,7 +226,7 @@ static void MX_ADC_Init(void)
   /* USER CODE END ADC_Init 1 */
 
   /** Configure the global features of the ADC (Clock, Resolution, Data Alignment and number of conversion)
-  */
+   */
   hadc.Instance = ADC1;
   hadc.Init.OversamplingMode = DISABLE;
   hadc.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV2;
@@ -250,7 +250,7 @@ static void MX_ADC_Init(void)
   }
 
   /** Configure for the selected ADC regular channel to be converted.
-  */
+   */
   sConfig.Channel = ADC_CHANNEL_0;
   sConfig.Rank = ADC_RANK_CHANNEL_NUMBER;
   if (HAL_ADC_ConfigChannel(&hadc, &sConfig) != HAL_OK)
@@ -259,7 +259,7 @@ static void MX_ADC_Init(void)
   }
 
   /** Configure for the selected ADC regular channel to be converted.
-  */
+   */
   sConfig.Channel = ADC_CHANNEL_1;
   if (HAL_ADC_ConfigChannel(&hadc, &sConfig) != HAL_OK)
   {
@@ -267,7 +267,7 @@ static void MX_ADC_Init(void)
   }
 
   /** Configure for the selected ADC regular channel to be converted.
-  */
+   */
   sConfig.Channel = ADC_CHANNEL_4;
   if (HAL_ADC_ConfigChannel(&hadc, &sConfig) != HAL_OK)
   {
@@ -275,7 +275,7 @@ static void MX_ADC_Init(void)
   }
 
   /** Configure for the selected ADC regular channel to be converted.
-  */
+   */
   sConfig.Channel = ADC_CHANNEL_6;
   if (HAL_ADC_ConfigChannel(&hadc, &sConfig) != HAL_OK)
   {
@@ -284,14 +284,13 @@ static void MX_ADC_Init(void)
   /* USER CODE BEGIN ADC_Init 2 */
 
   /* USER CODE END ADC_Init 2 */
-
 }
 
 /**
-  * @brief TIM21 Initialization Function
-  * @param None
-  * @retval None
-  */
+ * @brief TIM21 Initialization Function
+ * @param None
+ * @retval None
+ */
 static void MX_TIM21_Init(void)
 {
 
@@ -342,14 +341,13 @@ static void MX_TIM21_Init(void)
   /* USER CODE BEGIN TIM21_Init 2 */
 
   /* USER CODE END TIM21_Init 2 */
-
 }
 
 /**
-  * @brief USART2 Initialization Function
-  * @param None
-  * @retval None
-  */
+ * @brief USART2 Initialization Function
+ * @param None
+ * @retval None
+ */
 static void MX_USART2_UART_Init(void)
 {
 
@@ -377,12 +375,11 @@ static void MX_USART2_UART_Init(void)
   /* USER CODE BEGIN USART2_Init 2 */
 
   /* USER CODE END USART2_Init 2 */
-
 }
 
 /**
-  * Enable DMA controller clock
-  */
+ * Enable DMA controller clock
+ */
 static void MX_DMA_Init(void)
 {
 
@@ -393,19 +390,18 @@ static void MX_DMA_Init(void)
   /* DMA1_Channel1_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA1_Channel1_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(DMA1_Channel1_IRQn);
-
 }
 
 /**
-  * @brief GPIO Initialization Function
-  * @param None
-  * @retval None
-  */
+ * @brief GPIO Initialization Function
+ * @param None
+ * @retval None
+ */
 static void MX_GPIO_Init(void)
 {
   GPIO_InitTypeDef GPIO_InitStruct = {0};
-/* USER CODE BEGIN MX_GPIO_Init_1 */
-/* USER CODE END MX_GPIO_Init_1 */
+  /* USER CODE BEGIN MX_GPIO_Init_1 */
+  /* USER CODE END MX_GPIO_Init_1 */
 
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOC_CLK_ENABLE();
@@ -429,8 +425,8 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(LD2_GPIO_Port, &GPIO_InitStruct);
 
-/* USER CODE BEGIN MX_GPIO_Init_2 */
-/* USER CODE END MX_GPIO_Init_2 */
+  /* USER CODE BEGIN MX_GPIO_Init_2 */
+  /* USER CODE END MX_GPIO_Init_2 */
 }
 
 /* USER CODE BEGIN 4 */
@@ -438,19 +434,20 @@ static void MX_GPIO_Init(void)
 /* USER CODE END 4 */
 
 /**
-  * @brief  Period elapsed callback in non blocking mode
-  * @note   This function is called  when TIM2 interrupt took place, inside
-  * HAL_TIM_IRQHandler(). It makes a direct call to HAL_IncTick() to increment
-  * a global variable "uwTick" used as application time base.
-  * @param  htim : TIM handle
-  * @retval None
-  */
+ * @brief  Period elapsed callback in non blocking mode
+ * @note   This function is called  when TIM2 interrupt took place, inside
+ * HAL_TIM_IRQHandler(). It makes a direct call to HAL_IncTick() to increment
+ * a global variable "uwTick" used as application time base.
+ * @param  htim : TIM handle
+ * @retval None
+ */
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
   /* USER CODE BEGIN Callback 0 */
 
   /* USER CODE END Callback 0 */
-  if (htim->Instance == TIM2) {
+  if (htim->Instance == TIM2)
+  {
     HAL_IncTick();
   }
   /* USER CODE BEGIN Callback 1 */
@@ -459,9 +456,9 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 }
 
 /**
-  * @brief  This function is executed in case of error occurrence.
-  * @retval None
-  */
+ * @brief  This function is executed in case of error occurrence.
+ * @retval None
+ */
 void Error_Handler(void)
 {
   /* USER CODE BEGIN Error_Handler_Debug */
@@ -473,14 +470,14 @@ void Error_Handler(void)
   /* USER CODE END Error_Handler_Debug */
 }
 
-#ifdef  USE_FULL_ASSERT
+#ifdef USE_FULL_ASSERT
 /**
-  * @brief  Reports the name of the source file and the source line number
-  *         where the assert_param error has occurred.
-  * @param  file: pointer to the source file name
-  * @param  line: assert_param error line source number
-  * @retval None
-  */
+ * @brief  Reports the name of the source file and the source line number
+ *         where the assert_param error has occurred.
+ * @param  file: pointer to the source file name
+ * @param  line: assert_param error line source number
+ * @retval None
+ */
 void assert_failed(uint8_t *file, uint32_t line)
 {
   /* USER CODE BEGIN 6 */
