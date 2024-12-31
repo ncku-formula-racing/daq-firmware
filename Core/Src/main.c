@@ -76,7 +76,8 @@ int main(void)
 
   /* USER CODE BEGIN 1 */
   uint8_t counter;
-  uint16_t voltage[4];
+  uint16_t voltage[3];
+  uint16_t result[3];
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -111,43 +112,21 @@ int main(void)
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   counter = 0;
+  if(HAL_ADC_Start_DMA(&hadc,(uint32_t *)voltage,3) != HAL_OK)
+  {
+    SEGGER_RTT_printf(0, "ADC initialization error!\n");
+  }
   while (1)
   {
     HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
-    // HAL_ADC_Start(&hadc);
-    // HAL_ADC_PollForConversion(&hadc, 0x01);
-    // if (HAL_IS_BIT_SET(HAL_ADC_GetState(&hadc), HAL_ADC_STATE_REG_EOC))
-    // {
-    //   voltage[counter] = HAL_ADC_GetValue(&hadc);
-    //   voltage[counter] = voltage[counter] * 3300 / 4095;
-    //   SEGGER_RTT_printf(0, "voltage[%d]=%d\n", counter, voltage[counter]);
-    //   counter++;
-    // }
-    // HAL_ADC_PollForConversion(&hadc, 0x01);
-    // if (HAL_IS_BIT_SET(HAL_ADC_GetState(&hadc), HAL_ADC_STATE_REG_EOC))
-    // {
-    //   voltage[counter] = HAL_ADC_GetValue(&hadc);
-    //   voltage[counter] = voltage[counter] * 3300 / 4095;
-    //   SEGGER_RTT_printf(0, "voltage[%d]=%d\n", counter, voltage[counter]);
-    //   counter++;
-    // }
-    // HAL_ADC_PollForConversion(&hadc, 0x01);
-    // if (HAL_IS_BIT_SET(HAL_ADC_GetState(&hadc), HAL_ADC_STATE_REG_EOC))
-    // {
-    //   voltage[counter] = HAL_ADC_GetValue(&hadc);
-    //   voltage[counter] = voltage[counter] * 3300 / 4095;
-    //   SEGGER_RTT_printf(0, "voltage[%d]=%d\n", counter, voltage[counter]);
-    //   counter++;
-    // }
-    // HAL_ADC_PollForConversion(&hadc, 0x01);
-    // if (HAL_IS_BIT_SET(HAL_ADC_GetState(&hadc), HAL_ADC_STATE_REG_EOC))
-    // {
-    //   voltage[counter] = HAL_ADC_GetValue(&hadc);
-    //   voltage[counter] = voltage[counter] * 3300 / 4095;
-    //   SEGGER_RTT_printf(0, "voltage[%d]=%d\n", counter, voltage[counter]);
-    //   counter = 0;
-    // }
-    // SEGGER_RTT_printf(0, "\n");
+
+    result[counter] = voltage[counter] * 3300 / 4095;
+    SEGGER_RTT_printf(0, "voltage[%d]=%d\n", counter, result[counter]);
+    counter++;
+    if (counter==3) {
+      counter = 0;
+    }
+    
     HAL_Delay(500);
     /* USER CODE END WHILE */
 
@@ -231,14 +210,14 @@ static void MX_ADC_Init(void)
   hadc.Init.OversamplingMode = DISABLE;
   hadc.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV2;
   hadc.Init.Resolution = ADC_RESOLUTION_12B;
-  hadc.Init.SamplingTime = ADC_SAMPLETIME_1CYCLE_5;
+  hadc.Init.SamplingTime = ADC_SAMPLETIME_160CYCLES_5;
   hadc.Init.ScanConvMode = ADC_SCAN_DIRECTION_FORWARD;
   hadc.Init.DataAlign = ADC_DATAALIGN_RIGHT;
   hadc.Init.ContinuousConvMode = ENABLE;
   hadc.Init.DiscontinuousConvMode = DISABLE;
   hadc.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
   hadc.Init.ExternalTrigConv = ADC_SOFTWARE_START;
-  hadc.Init.DMAContinuousRequests = DISABLE;
+  hadc.Init.DMAContinuousRequests = ENABLE;
   hadc.Init.EOCSelection = ADC_EOC_SINGLE_CONV;
   hadc.Init.Overrun = ADC_OVR_DATA_PRESERVED;
   hadc.Init.LowPowerAutoWait = DISABLE;
@@ -269,14 +248,6 @@ static void MX_ADC_Init(void)
   /** Configure for the selected ADC regular channel to be converted.
   */
   sConfig.Channel = ADC_CHANNEL_4;
-  if (HAL_ADC_ConfigChannel(&hadc, &sConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
-
-  /** Configure for the selected ADC regular channel to be converted.
-  */
-  sConfig.Channel = ADC_CHANNEL_6;
   if (HAL_ADC_ConfigChannel(&hadc, &sConfig) != HAL_OK)
   {
     Error_Handler();
