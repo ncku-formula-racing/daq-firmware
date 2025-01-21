@@ -50,6 +50,7 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     # Add user sources here
     ./RTT/RTT/SEGGER_RTT.c
     ./RTT/RTT/SEGGER_RTT_printf.c
+    ./Temperature/Temperature.c
 )
 
 # Add include paths
@@ -57,6 +58,7 @@ target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
     # Add user defined include paths
     ./RTT/Config
     ./RTT/RTT
+    ./Temperature/
 )
 
 # Add project symbols (macros)

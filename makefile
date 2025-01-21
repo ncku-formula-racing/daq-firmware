@@ -23,6 +23,6 @@ debug:
 	@-pyocd gdbserver -t $(TARGET) --persist
 
 format:
-	find . -name build -type d \! -prune -o -name Drivers -type d \! -prune -o -name RTT -type d \! -prune -o -iname '*.h' -o -iname '*.cpp' | xargs clang-format -i
+	find . -name build -type d \! -prune -o -name Drivers -type d \! -prune -o -name RTT -type d \! -prune -o -iname '*.h' -o -iname '*.c' | xargs clang-format -i
 
 .PHONY: all clean flash monitor
