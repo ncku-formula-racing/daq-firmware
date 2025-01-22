@@ -1,12 +1,12 @@
-#include "Temperature.h"
+#include "Sensors.h"
 
 // static int isRxed;
 // static uint8_t RxData[8];
+static float flow_rate;
 
-// void HAL_UART_TxCpltCallback(UART_HandleTypeDef* huart) {
-//   SEGGER_RTT_printf(0, "hello world!\n");
-//   isRxed = 1;
-// }
+float* fetch_flowrate() {
+  return &flow_rate;
+}
 
 static inline int int_to_int(uint8_t k) {
   if (k == 0) return 0;
@@ -15,7 +15,6 @@ static inline int int_to_int(uint8_t k) {
 }
 
 void uart_init(UART_HandleTypeDef* huart, int baudrate) {
-  huart->Instance = USART1;
   huart->Init.BaudRate = baudrate;
   huart->Init.WordLength = UART_WORDLENGTH_8B;
   huart->Init.StopBits = UART_STOPBITS_1;
@@ -51,27 +50,6 @@ uint8_t DS18B20_ReadBit(UART_HandleTypeDef* huart) {
 
   return (RxBit & 0x01);
 }
-
-// uint8_t DS18B20_ReadByte(UART_HandleTypeDef* huart) {
-//   uint8_t buffer[8];
-//   uint8_t value = 0;
-//   for (int i = 0; i < 8; i++) {
-//     buffer[i] = 0xFF;
-//   }
-
-//   HAL_UART_Transmit_DMA(huart, buffer, 8);
-//   HAL_UART_Receive_DMA(huart, RxData, 8);
-//   // while(isRxed == 0);
-
-//   for (uint8_t i = 0; i < 8; i++) {
-//     if (RxData[i] == 0xFF) {
-//       value |= 1 << i;
-//     }
-//   }
-
-//   isRxed = 0;
-//   return value;
-// }
 
 uint8_t DS18B20_ReadByte(UART_HandleTypeDef* huart) {
   uint8_t RxByte = 0;

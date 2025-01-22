@@ -48,17 +48,17 @@ target_link_directories(${CMAKE_PROJECT_NAME} PRIVATE
 # Add sources to executable
 target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     # Add user sources here
-    ./RTT/RTT/SEGGER_RTT.c
-    ./RTT/RTT/SEGGER_RTT_printf.c
-    ./Temperature/Temperature.c
+    ./Tasks/RTT/RTT/SEGGER_RTT.c
+    ./Tasks/RTT/RTT/SEGGER_RTT_printf.c
+    ./Tasks/Sensors/Sensors.c
 )
 
 # Add include paths
 target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
     # Add user defined include paths
-    ./RTT/Config/
-    ./RTT/RTT/
-    ./Temperature/
+    ./Tasks/RTT/Config/
+    ./Tasks/RTT/RTT/
+    ./Tasks/Sensors/
 )
 
 # Add project symbols (macros)
