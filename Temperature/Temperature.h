@@ -2,8 +2,9 @@
 #define _TEMP_SENSOR_H
 
 #include <stdlib.h>
-#include "main.h"
+
 #include "SEGGER_RTT.h"
+#include "main.h"
 
 void uart_init(UART_HandleTypeDef* huart, int baudrate);
 void DS18B20_WriteByte(UART_HandleTypeDef* huart, uint8_t data);
