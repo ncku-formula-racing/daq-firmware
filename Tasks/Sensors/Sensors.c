@@ -14,6 +14,11 @@ static inline int int_to_int(uint8_t k) {
   return (k % 2) + 10 * int_to_int(k / 2);
 }
 
+void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart) { 
+  // SEGGER_RTT_printf(0, "hello world!\n"); 
+  isRxed = 1;
+}
+
 void uart_init(UART_HandleTypeDef* huart, int baudrate) {
   huart->Init.BaudRate = baudrate;
   huart->Init.WordLength = UART_WORDLENGTH_8B;
@@ -38,29 +43,6 @@ void DS18B20_WriteByte(UART_HandleTypeDef* huart, uint8_t data) {
   }
   HAL_UART_Transmit(huart, TxBuffer, 8, 1000);
 }
-
-// uint8_t DS18B20_ReadBit(UART_HandleTypeDef* huart) {
-//   uint8_t ReadBitCMD = 0xFF;
-//   uint8_t RxBit;
-
-//   // Send Read Bit CMD
-//   HAL_UART_Transmit(huart, &ReadBitCMD, 1, 1);
-//   // Receive The Bit
-//   HAL_UART_Receive(huart, &RxBit, 1, 1);
-
-//   return (RxBit & 0x01);
-// }
-
-// uint8_t DS18B20_ReadByte(UART_HandleTypeDef* huart) {
-//   uint8_t RxByte = 0;
-//   for (uint8_t i = 0; i < 8; i++) {
-//     RxByte >>= 1;
-//     if (DS18B20_ReadBit(huart)) {
-//       RxByte |= 0x80;
-//     }
-//   }
-//   return RxByte;
-// }
 
 uint8_t DS18B20_ReadByte(UART_HandleTypeDef* huart)
 {
@@ -127,15 +109,11 @@ int DS18B20_ReadTemp(UART_HandleTypeDef* huart) {
   DS18B20_WriteByte(huart, 0xCC);  // Skip ROM         (ROM-CMD)
   DS18B20_WriteByte(huart, 0xBE);  // Read Scratchpad  (F-CMD)
   Temp_LSB = DS18B20_ReadByte(huart);
-  SEGGER_RTT_printf(0, "LSB: %d\n", int_to_int(Temp_LSB));
   Temp_MSB = DS18B20_ReadByte(huart);
-  SEGGER_RTT_printf(0, "MSB: %d\n", int_to_int(Temp_MSB));  
+  // SEGGER_RTT_printf(0, "LSB: %d\n", int_to_int(Temp_LSB));
+  // SEGGER_RTT_printf(0, "MSB: %d\n", int_to_int(Temp_MSB));  
   Temp = ((Temp_MSB << 8)) | Temp_LSB;
   // SEGGER_RTT_printf(0, "x16: %d\n", Temp);
   Temperature = Temp >>= 4;
   return Temperature;
-}
-
-int* fetch_isRxed() {
-  return &isRxed;
 }
