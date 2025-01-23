@@ -69,12 +69,13 @@ uint8_t DS18B20_ReadByte(UART_HandleTypeDef* huart)
 	for (int i=0; i<8; i++)
 	{
 		buffer[i] = 0xFF;
+    RxData[i] = 0x00;
 	}
 	
 	HAL_UART_Transmit_DMA(huart, buffer, 8);
 	HAL_UART_Receive_DMA(huart, RxData, 8);
 
-	while (isRxed == 0){SEGGER_RTT_printf(0, "hello!\n");};
+	while (isRxed == 0)// {SEGGER_RTT_printf(0, "hello!\n");};
 	for (int i=0;i<8;i++)
 	{
 		if (RxData[i]==0xFF)  // if the pin is HIGH
@@ -126,7 +127,9 @@ int DS18B20_ReadTemp(UART_HandleTypeDef* huart) {
   DS18B20_WriteByte(huart, 0xCC);  // Skip ROM         (ROM-CMD)
   DS18B20_WriteByte(huart, 0xBE);  // Read Scratchpad  (F-CMD)
   Temp_LSB = DS18B20_ReadByte(huart);
+  SEGGER_RTT_printf(0, "LSB: %d\n", int_to_int(Temp_LSB));
   Temp_MSB = DS18B20_ReadByte(huart);
+  SEGGER_RTT_printf(0, "MSB: %d\n", int_to_int(Temp_MSB));  
   Temp = ((Temp_MSB << 8)) | Temp_LSB;
   // SEGGER_RTT_printf(0, "x16: %d\n", Temp);
   Temperature = Temp >>= 4;

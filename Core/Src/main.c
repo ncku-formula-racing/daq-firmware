@@ -62,7 +62,7 @@ static void MX_USART1_UART_Init(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart) { 
-  SEGGER_RTT_printf(0, "hello world!\n"); 
+  // SEGGER_RTT_printf(0, "hello world!\n"); 
   *isRxed = 1;
 }
 /* USER CODE END 0 */
@@ -118,7 +118,7 @@ int main(void)
     HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
     DS18B20_SampleTemp(&huart1);               // Convert (Sample) Temperature Now
     DS18B20_Temp = DS18B20_ReadTemp(&huart1);  // Read The Conversion Result Temperature Value
-    // SEGGER_RTT_printf(0, "time: %d, temperature_1: %d\n", HAL_GetTick(), DS18B20_Temp);
+    SEGGER_RTT_printf(0, "time: %d, temperature_1: %d\n", HAL_GetTick(), DS18B20_Temp);
 
     // DS18B20_SampleTemp(&huart2);               // Convert (Sample) Temperature Now
     // DS18B20_Temp = DS18B20_ReadTemp(&huart2);  // Read The Conversion Result Temperature Value
