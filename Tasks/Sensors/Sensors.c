@@ -74,7 +74,7 @@ uint8_t DS18B20_ReadByte(UART_HandleTypeDef* huart)
 	HAL_UART_Transmit_DMA(huart, buffer, 8);
 	HAL_UART_Receive_DMA(huart, RxData, 8);
 
-	while (isRxed == 0);
+	while (isRxed == 0){SEGGER_RTT_printf(0, "hello!\n");};
 	for (int i=0;i<8;i++)
 	{
 		if (RxData[i]==0xFF)  // if the pin is HIGH
