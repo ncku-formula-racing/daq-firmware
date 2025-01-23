@@ -48,9 +48,12 @@ TIM_HandleTypeDef htim1;
 
 UART_HandleTypeDef huart1;
 UART_HandleTypeDef huart2;
+DMA_HandleTypeDef hdma_usart1_rx;
+DMA_HandleTypeDef hdma_usart1_tx;
 
 /* USER CODE BEGIN PV */
-
+static float* flow_rate;
+static int* isRxed;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -67,7 +70,10 @@ static void MX_USART2_UART_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-// void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart) { SEGGER_RTT_printf(0, "hello world!\n"); }
+void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart) { 
+  SEGGER_RTT_printf(0, "hello world!\n"); 
+  *isRxed = 1;
+  }
 /* USER CODE END 0 */
 
 /**
@@ -81,7 +87,6 @@ int main(void)
   int DS18B20_Temp;
   uint16_t voltage;
   uint16_t result;
-  float* flow_rate;
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -111,6 +116,7 @@ int main(void)
   HAL_Delay(500);
   SEGGER_RTT_printf(0, "start\n");
   flow_rate = fetch_flowrate();
+  isRxed = fetch_isRxed();
   HAL_TIM_IC_Start_IT(&htim1, TIM_CHANNEL_1);
   HAL_TIM_IC_Start(&htim1, TIM_CHANNEL_1);
   if (HAL_ADC_Start_DMA(&hadc1, (uint32_t *)&voltage, 1) != HAL_OK) {
@@ -374,6 +380,12 @@ static void MX_DMA_Init(void)
   /* DMA1_Channel1_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA1_Channel1_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(DMA1_Channel1_IRQn);
+  /* DMA1_Channel4_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Channel4_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Channel4_IRQn);
+  /* DMA1_Channel5_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Channel5_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Channel5_IRQn);
 
 }
 

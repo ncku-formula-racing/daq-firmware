@@ -1,7 +1,7 @@
 #include "Sensors.h"
 
-// static int isRxed;
-// static uint8_t RxData[8];
+static int isRxed;
+static uint8_t RxData[8];
 static float flow_rate;
 
 float* fetch_flowrate() {
@@ -39,27 +39,51 @@ void DS18B20_WriteByte(UART_HandleTypeDef* huart, uint8_t data) {
   HAL_UART_Transmit(huart, TxBuffer, 8, 1000);
 }
 
-uint8_t DS18B20_ReadBit(UART_HandleTypeDef* huart) {
-  uint8_t ReadBitCMD = 0xFF;
-  uint8_t RxBit;
+// uint8_t DS18B20_ReadBit(UART_HandleTypeDef* huart) {
+//   uint8_t ReadBitCMD = 0xFF;
+//   uint8_t RxBit;
 
-  // Send Read Bit CMD
-  HAL_UART_Transmit(huart, &ReadBitCMD, 1, 1);
-  // Receive The Bit
-  HAL_UART_Receive(huart, &RxBit, 1, 1);
+//   // Send Read Bit CMD
+//   HAL_UART_Transmit(huart, &ReadBitCMD, 1, 1);
+//   // Receive The Bit
+//   HAL_UART_Receive(huart, &RxBit, 1, 1);
 
-  return (RxBit & 0x01);
-}
+//   return (RxBit & 0x01);
+// }
 
-uint8_t DS18B20_ReadByte(UART_HandleTypeDef* huart) {
-  uint8_t RxByte = 0;
-  for (uint8_t i = 0; i < 8; i++) {
-    RxByte >>= 1;
-    if (DS18B20_ReadBit(huart)) {
-      RxByte |= 0x80;
-    }
-  }
-  return RxByte;
+// uint8_t DS18B20_ReadByte(UART_HandleTypeDef* huart) {
+//   uint8_t RxByte = 0;
+//   for (uint8_t i = 0; i < 8; i++) {
+//     RxByte >>= 1;
+//     if (DS18B20_ReadBit(huart)) {
+//       RxByte |= 0x80;
+//     }
+//   }
+//   return RxByte;
+// }
+
+uint8_t DS18B20_ReadByte(UART_HandleTypeDef* huart)
+{
+	uint8_t buffer[8];
+	uint8_t value = 0;
+	for (int i=0; i<8; i++)
+	{
+		buffer[i] = 0xFF;
+	}
+	
+	HAL_UART_Transmit_DMA(huart, buffer, 8);
+	HAL_UART_Receive_DMA(huart, RxData, 8);
+
+	while (isRxed == 0);
+	for (int i=0;i<8;i++)
+	{
+		if (RxData[i]==0xFF)  // if the pin is HIGH
+		{
+			value |= 1<<i;  // read = 1
+		}
+	}
+	isRxed = 0;
+	return value;
 }
 
 uint8_t DS18B20_Init(UART_HandleTypeDef* huart) {
@@ -107,4 +131,8 @@ int DS18B20_ReadTemp(UART_HandleTypeDef* huart) {
   // SEGGER_RTT_printf(0, "x16: %d\n", Temp);
   Temperature = Temp >>= 4;
   return Temperature;
+}
+
+int* fetch_isRxed() {
+  return &isRxed;
 }
