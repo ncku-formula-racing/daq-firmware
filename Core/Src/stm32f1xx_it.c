@@ -236,8 +236,9 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim) {
   static float* flow_rate = NULL;
   if(!flow_rate) flow_rate = fetch_flowrate();
   
-  *flow_rate = (float)(10000/(w - tim1))/7.5;
+  *flow_rate = (float)((10000/(w - tim1))/7.5)*1000;
   // SEGGER_RTT_printf(0, "tick = %d\n", w);
+  // SEGGER_RTT_printf(0, "flow rate = %d L/min\n", (int)*flow_rate);
   
   tim1 = w;
 }
