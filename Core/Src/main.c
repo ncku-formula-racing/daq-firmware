@@ -67,7 +67,7 @@ static void MX_USART2_UART_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-// void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart) { SEGGER_RTT_printf(0, "hello world!\n"); }
+//  void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart) { SEGGER_RTT_printf(0, "hello world!\n"); }
 /* USER CODE END 0 */
 
 /**
