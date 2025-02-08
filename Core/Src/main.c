@@ -56,7 +56,9 @@ DMA_HandleTypeDef hdma_usart2_tx;
 DMA_HandleTypeDef hdma_usart2_rx;
 
 /* USER CODE BEGIN PV */
-static float* flow_rate;
+// static float* flow_rate;
+// static int* DS18B20_Temp;
+// static uint16_t* result;
 // static int* isRxed;
 /* USER CODE END PV */
 
@@ -86,9 +88,7 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
-  int DS18B20_Temp;
-  uint16_t voltage;
-  uint16_t result;
+
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -118,30 +118,11 @@ int main(void)
   /* USER CODE BEGIN 2 */
   HAL_Delay(500);
   SEGGER_RTT_printf(0, "start\n");
-  flow_rate = fetch_flowrate();
-  HAL_TIM_IC_Start_IT(&htim1, TIM_CHANNEL_1);
-  HAL_TIM_IC_Start(&htim1, TIM_CHANNEL_1);
-  if (HAL_ADC_Start_DMA(&hadc1, (uint32_t *)&voltage, 1) != HAL_OK) {
-    SEGGER_RTT_printf(0, "ADC initialization error!\n");
-  }
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1) {
-    HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
-    DS18B20_SampleTemp(&huart1);               // Convert (Sample) Temperature Now
-    DS18B20_Temp = DS18B20_ReadTemp(&huart1);  // Read The Conversion Result Temperature Value
-    SEGGER_RTT_printf(0, "time: %d, temperature_1: %d\n", HAL_GetTick(), DS18B20_Temp);
-
-    DS18B20_SampleTemp(&huart2);               // Convert (Sample) Temperature Now
-    DS18B20_Temp = DS18B20_ReadTemp(&huart2);  // Read The Conversion Result Temperature Value
-    SEGGER_RTT_printf(0, "time: %d, temperature_2: %d\n", HAL_GetTick(), DS18B20_Temp);
-
-    result = voltage * 3300 / 4095;
-    SEGGER_RTT_printf(0, "voltage = %d\n", result);
-
-    SEGGER_RTT_printf(0, "flow rate = %d mL/min\n", (int)*flow_rate);
 
     HAL_Delay(500);
     /* USER CODE END WHILE */
@@ -260,11 +241,11 @@ static void MX_CAN_Init(void)
 
   /* USER CODE END CAN_Init 1 */
   hcan.Instance = CAN1;
-  hcan.Init.Prescaler = 16;
+  hcan.Init.Prescaler = 9;
   hcan.Init.Mode = CAN_MODE_NORMAL;
   hcan.Init.SyncJumpWidth = CAN_SJW_1TQ;
-  hcan.Init.TimeSeg1 = CAN_BS1_1TQ;
-  hcan.Init.TimeSeg2 = CAN_BS2_1TQ;
+  hcan.Init.TimeSeg1 = CAN_BS1_3TQ;
+  hcan.Init.TimeSeg2 = CAN_BS2_4TQ;
   hcan.Init.TimeTriggeredMode = DISABLE;
   hcan.Init.AutoBusOff = DISABLE;
   hcan.Init.AutoWakeUp = DISABLE;

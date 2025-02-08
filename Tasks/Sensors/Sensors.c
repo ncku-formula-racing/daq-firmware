@@ -1,12 +1,13 @@
+
+
 #include "Sensors.h"
 
 static int isRxed;
 static uint8_t RxData[8];
 static float flow_rate;
-
-float* fetch_flowrate() {
-  return &flow_rate;
-}
+static int DS18B20_Temp;
+static uint16_t voltage;
+static int result;
 
 static inline int int_to_int(uint8_t k) {
   if (k == 0) return 0;
@@ -14,6 +15,27 @@ static inline int int_to_int(uint8_t k) {
   return (k % 2) + 10 * int_to_int(k / 2);
 }
 
+// fetch references
+float* fetch_flowrate() {
+  return &flow_rate;
+}
+
+int* fetch_temperature() {
+  return &DS18B20_Temp;
+}
+
+int* fetch_pressure() {
+  return &result;
+}
+
+// water flow rate
+void flowrate_nvic_init() {
+  extern TIM_HandleTypeDef htim1;
+  HAL_TIM_IC_Start_IT(&htim1, TIM_CHANNEL_1);
+  HAL_TIM_IC_Start(&htim1, TIM_CHANNEL_1);
+}
+
+// Temperature sensors onewire communication implementation
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart) { 
   // SEGGER_RTT_printf(0, "hello world!\n"); 
   isRxed = 1;
@@ -116,4 +138,26 @@ int DS18B20_ReadTemp(UART_HandleTypeDef* huart) {
   // SEGGER_RTT_printf(0, "x16: %d\n", Temp);
   Temperature = Temp >>= 4;
   return Temperature;
+}
+
+void get_temp(UART_HandleTypeDef* huart) {
+  DS18B20_SampleTemp(huart);               // Convert (Sample) Temperature Now
+  DS18B20_Temp = DS18B20_ReadTemp(huart);  // Read The Conversion Result Temperature Value
+
+  SEGGER_RTT_printf(0, "time: %d, temperature: %d\n", HAL_GetTick(), DS18B20_Temp);
+}
+
+// ADC (Pressure Transducer)
+void init_ADC_DMA() {
+  extern ADC_HandleTypeDef hadc1;
+  if (HAL_ADC_Start_DMA(&hadc1, (uint32_t *)&voltage, 1) != HAL_OK) {
+    SEGGER_RTT_printf(0, "ADC initialization error!\n");
+  };
+}
+
+void get_pressure() {
+  // Should follow the formula of the datasheet to calculate
+  // the correct pressure and store it to result
+  result = voltage * 3300 / 4095;
+  SEGGER_RTT_printf(0, "voltage = %d\n", result);
 }

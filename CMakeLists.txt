@@ -51,6 +51,7 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     ./Tasks/RTT/RTT/SEGGER_RTT.c
     ./Tasks/RTT/RTT/SEGGER_RTT_printf.c
     ./Tasks/Sensors/Sensors.c
+    ./Tasks/Commu/commu.c
 )
 
 # Add include paths
@@ -59,6 +60,7 @@ target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
     ./Tasks/RTT/Config/
     ./Tasks/RTT/RTT/
     ./Tasks/Sensors/
+    ./Tasks/Commu/
 )
 
 # Add project symbols (macros)
