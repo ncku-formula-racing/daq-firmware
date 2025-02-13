@@ -59,3 +59,12 @@ void can_send_data() {
     SEGGER_RTT_printf(0, "Failed to write parameter\n");
   }
 }
+
+can_receive_data(CAN_RxHeaderTypeDef *rx_header,uint8_t *rx_data) {
+  uint8_t temp1 = rx_data[0];
+  uint8_t temp2 = rx_data[1];
+  uint16_t flow = (rx_data[2] << 8) | rx_data[3];
+  uint16_t pressure = (rx_data[4] << 8) | rx_data[5];
+
+  SEGGER_RTT_printf(0, "temp1: %d, temp2: %d, flow: %d, pressure: %d\n", temp1, temp2, flow, pressure);
+}

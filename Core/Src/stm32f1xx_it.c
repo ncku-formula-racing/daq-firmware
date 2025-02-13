@@ -321,6 +321,36 @@ void USART2_IRQHandler(void)
 }
 
 /* USER CODE BEGIN 1 */
+// CAN Bus RX Callback
+void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan) {
+  static CAN_RxHeaderTypeDef rx_header;
+  static uint8_t rx_data[128];
+  HAL_CAN_GetRxMessage(hcan, CAN_RX_FIFO0, &rx_header, rx_data);
+
+  can_receive_data(&rx_header, rx_data);
+
+
+#ifdef FSAE_IMU
+  static imu_t *imu = NULL;
+  if (!imu) imu = open_imu_instance(0);
+  imu_bsp_interrupt(imu, &rx_header, rx_data);
+#endif
+
+#ifdef FSAE_INVERTER
+  static inverter_t *inverter_R = NULL, *inverter_L = NULL;
+  if (!inverter_R) inverter_R = open_inverter_instance(0);
+  if (!inverter_L) inverter_L = open_inverter_instance(1);
+  inverter_bsp_interrupt(inverter_R, &rx_header, rx_data);
+  inverter_bsp_interrupt(inverter_L, &rx_header, rx_data);
+#endif
+
+#ifdef FSAE_STEERING
+  static steering_t *steering = NULL;
+  if (!steering) steering = open_steering_instance(0);
+  steering_bsp_interrupt(steering, &rx_header, rx_data);
+#endif
+}
+
 void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim) {
   w = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_1);
   static float* flow_rate = NULL;

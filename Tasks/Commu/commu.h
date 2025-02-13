@@ -11,4 +11,6 @@ void can_fetch_reference();
 
 void can_send_data();
 
+void can_receive_data(CAN_RxHeaderTypeDef *rx_header,uint8_t *rx_data);
+
 #endif
