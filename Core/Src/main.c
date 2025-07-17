@@ -139,6 +139,8 @@ int main(void)
 
     SEGGER_RTT_printf(0, "flow rate = %d mL/min\n", (int)*flow_rate);
 
+    *flow_rate = 0;
+
     HAL_Delay(500);
     /* USER CODE END WHILE */
 
