@@ -124,6 +124,8 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1) {
 
+    *flow_rate = 0;
+
     HAL_Delay(500);
     /* USER CODE END WHILE */
 
