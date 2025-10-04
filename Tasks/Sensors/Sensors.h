@@ -2,9 +2,10 @@
 #define _SENSOR_H
 
 #include <stdlib.h>
-#include "stm32f1xx_hal.h"
-#include "main.h"
+
 #include "SEGGER_RTT.h"
+#include "main.h"
+#include "stm32f1xx_hal.h"
 
 // fetch references
 float* fetch_flowrate();

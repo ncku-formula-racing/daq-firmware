@@ -1,21 +1,21 @@
 /* USER CODE BEGIN Header */
 /**
-  ******************************************************************************
-  * @file    can.c
-  * @brief   This file provides code for the configuration
-  *          of the CAN instances.
-  ******************************************************************************
-  * @attention
-  *
-  * Copyright (c) 2025 STMicroelectronics.
-  * All rights reserved.
-  *
-  * This software is licensed under terms that can be found in the LICENSE file
-  * in the root directory of this software component.
-  * If no LICENSE file comes with this software, it is provided AS-IS.
-  *
-  ******************************************************************************
-  */
+ ******************************************************************************
+ * @file    can.c
+ * @brief   This file provides code for the configuration
+ *          of the CAN instances.
+ ******************************************************************************
+ * @attention
+ *
+ * Copyright (c) 2025 STMicroelectronics.
+ * All rights reserved.
+ *
+ * This software is licensed under terms that can be found in the LICENSE file
+ * in the root directory of this software component.
+ * If no LICENSE file comes with this software, it is provided AS-IS.
+ *
+ ******************************************************************************
+ */
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "can.h"
@@ -27,9 +27,7 @@
 CAN_HandleTypeDef hcan;
 
 /* CAN init function */
-void MX_CAN_Init(void)
-{
-
+void MX_CAN_Init(void) {
   /* USER CODE BEGIN CAN_Init 0 */
 
   /* USER CODE END CAN_Init 0 */
@@ -49,25 +47,20 @@ void MX_CAN_Init(void)
   hcan.Init.AutoRetransmission = DISABLE;
   hcan.Init.ReceiveFifoLocked = DISABLE;
   hcan.Init.TransmitFifoPriority = DISABLE;
-  if (HAL_CAN_Init(&hcan) != HAL_OK)
-  {
+  if (HAL_CAN_Init(&hcan) != HAL_OK) {
     Error_Handler();
   }
   /* USER CODE BEGIN CAN_Init 2 */
 
   /* USER CODE END CAN_Init 2 */
-
 }
 
-void HAL_CAN_MspInit(CAN_HandleTypeDef* canHandle)
-{
-
+void HAL_CAN_MspInit(CAN_HandleTypeDef* canHandle) {
   GPIO_InitTypeDef GPIO_InitStruct = {0};
-  if(canHandle->Instance==CAN1)
-  {
-  /* USER CODE BEGIN CAN1_MspInit 0 */
+  if (canHandle->Instance == CAN1) {
+    /* USER CODE BEGIN CAN1_MspInit 0 */
 
-  /* USER CODE END CAN1_MspInit 0 */
+    /* USER CODE END CAN1_MspInit 0 */
     /* CAN1 clock enable */
     __HAL_RCC_CAN1_CLK_ENABLE();
 
@@ -88,20 +81,17 @@ void HAL_CAN_MspInit(CAN_HandleTypeDef* canHandle)
 
     __HAL_AFIO_REMAP_CAN1_2();
 
-  /* USER CODE BEGIN CAN1_MspInit 1 */
+    /* USER CODE BEGIN CAN1_MspInit 1 */
 
-  /* USER CODE END CAN1_MspInit 1 */
+    /* USER CODE END CAN1_MspInit 1 */
   }
 }
 
-void HAL_CAN_MspDeInit(CAN_HandleTypeDef* canHandle)
-{
+void HAL_CAN_MspDeInit(CAN_HandleTypeDef* canHandle) {
+  if (canHandle->Instance == CAN1) {
+    /* USER CODE BEGIN CAN1_MspDeInit 0 */
 
-  if(canHandle->Instance==CAN1)
-  {
-  /* USER CODE BEGIN CAN1_MspDeInit 0 */
-
-  /* USER CODE END CAN1_MspDeInit 0 */
+    /* USER CODE END CAN1_MspDeInit 0 */
     /* Peripheral clock disable */
     __HAL_RCC_CAN1_CLK_DISABLE();
 
@@ -109,11 +99,11 @@ void HAL_CAN_MspDeInit(CAN_HandleTypeDef* canHandle)
     PB8     ------> CAN_RX
     PB9     ------> CAN_TX
     */
-    HAL_GPIO_DeInit(GPIOB, GPIO_PIN_8|GPIO_PIN_9);
+    HAL_GPIO_DeInit(GPIOB, GPIO_PIN_8 | GPIO_PIN_9);
 
-  /* USER CODE BEGIN CAN1_MspDeInit 1 */
+    /* USER CODE BEGIN CAN1_MspDeInit 1 */
 
-  /* USER CODE END CAN1_MspDeInit 1 */
+    /* USER CODE END CAN1_MspDeInit 1 */
   }
 }
 

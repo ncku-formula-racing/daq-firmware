@@ -16,17 +16,11 @@ static inline int int_to_int(uint8_t k) {
 }
 
 // fetch references
-float* fetch_flowrate() {
-  return &flow_rate;
-}
+float* fetch_flowrate() { return &flow_rate; }
 
-int* fetch_temperature() {
-  return &DS18B20_Temp;
-}
+int* fetch_temperature() { return &DS18B20_Temp; }
 
-int* fetch_pressure() {
-  return &result;
-}
+int* fetch_pressure() { return &result; }
 
 // water flow rate
 void flowrate_nvic_init() {
@@ -36,8 +30,8 @@ void flowrate_nvic_init() {
 }
 
 // Temperature sensors onewire communication implementation
-void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart) { 
-  // SEGGER_RTT_printf(0, "hello world!\n"); 
+void HAL_UART_TxCpltCallback(UART_HandleTypeDef* huart) {
+  // SEGGER_RTT_printf(0, "hello world!\n");
   isRxed = 1;
 }
 
@@ -66,29 +60,26 @@ void DS18B20_WriteByte(UART_HandleTypeDef* huart, uint8_t data) {
   HAL_UART_Transmit(huart, TxBuffer, 8, 1000);
 }
 
-uint8_t DS18B20_ReadByte(UART_HandleTypeDef* huart)
-{
-	uint8_t buffer[8];
-	uint8_t value = 0;
-	for (int i=0; i<8; i++)
-	{
-		buffer[i] = 0xFF;
+uint8_t DS18B20_ReadByte(UART_HandleTypeDef* huart) {
+  uint8_t buffer[8];
+  uint8_t value = 0;
+  for (int i = 0; i < 8; i++) {
+    buffer[i] = 0xFF;
     RxData[i] = 0x00;
-	}
-	
-	HAL_UART_Transmit_DMA(huart, buffer, 8);
-	HAL_UART_Receive_DMA(huart, RxData, 8);
+  }
 
-	while (isRxed == 0)// {SEGGER_RTT_printf(0, "hello!\n");};
-	for (int i=0;i<8;i++)
-	{
-		if (RxData[i]==0xFF)  // if the pin is HIGH
-		{
-			value |= 1<<i;  // read = 1
-		}
-	}
-	isRxed = 0;
-	return value;
+  HAL_UART_Transmit_DMA(huart, buffer, 8);
+  HAL_UART_Receive_DMA(huart, RxData, 8);
+
+  while (isRxed == 0)  // {SEGGER_RTT_printf(0, "hello!\n");};
+    for (int i = 0; i < 8; i++) {
+      if (RxData[i] == 0xFF)  // if the pin is HIGH
+      {
+        value |= 1 << i;  // read = 1
+      }
+    }
+  isRxed = 0;
+  return value;
 }
 
 uint8_t DS18B20_Init(UART_HandleTypeDef* huart) {
@@ -133,7 +124,7 @@ int DS18B20_ReadTemp(UART_HandleTypeDef* huart) {
   Temp_LSB = DS18B20_ReadByte(huart);
   Temp_MSB = DS18B20_ReadByte(huart);
   // SEGGER_RTT_printf(0, "LSB: %d\n", int_to_int(Temp_LSB));
-  // SEGGER_RTT_printf(0, "MSB: %d\n", int_to_int(Temp_MSB));  
+  // SEGGER_RTT_printf(0, "MSB: %d\n", int_to_int(Temp_MSB));
   Temp = ((Temp_MSB << 8)) | Temp_LSB;
   // SEGGER_RTT_printf(0, "x16: %d\n", Temp);
   Temperature = Temp >>= 4;
@@ -141,16 +132,18 @@ int DS18B20_ReadTemp(UART_HandleTypeDef* huart) {
 }
 
 void get_temp(UART_HandleTypeDef* huart) {
-  DS18B20_SampleTemp(huart);               // Convert (Sample) Temperature Now
-  DS18B20_Temp = DS18B20_ReadTemp(huart);  // Read The Conversion Result Temperature Value
+  DS18B20_SampleTemp(huart);  // Convert (Sample) Temperature Now
+  DS18B20_Temp =
+      DS18B20_ReadTemp(huart);  // Read The Conversion Result Temperature Value
 
-  SEGGER_RTT_printf(0, "time: %d, temperature: %d\n", HAL_GetTick(), DS18B20_Temp);
+  SEGGER_RTT_printf(0, "time: %d, temperature: %d\n", HAL_GetTick(),
+                    DS18B20_Temp);
 }
 
 // ADC (Pressure Transducer)
 void init_ADC_DMA() {
   extern ADC_HandleTypeDef hadc1;
-  if (HAL_ADC_Start_DMA(&hadc1, (uint32_t *)&voltage, 1) != HAL_OK) {
+  if (HAL_ADC_Start_DMA(&hadc1, (uint32_t*)&voltage, 1) != HAL_OK) {
     SEGGER_RTT_printf(0, "ADC initialization error!\n");
   };
 }
