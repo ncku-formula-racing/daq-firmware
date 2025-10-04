@@ -22,6 +22,7 @@ static CAN_TxHeaderTypeDef tx_handler =
 void can_init() {
   init_ADC_DMA();
   flowrate_nvic_init();
+  *flow_rate = 0;
 }
 
 void can_fetch_reference() {
@@ -46,8 +47,9 @@ void can_send_data() {
   get_temp(&huart2);
   uint8_t temp2 = *DS18B20_Temp;
 
-  uint8_t flow1 = ((int)*flow_rate & 0xFF);
-  uint8_t flow2 = ((int)*flow_rate >> 8);
+  uint8_t flow1 = (*(int*)flow_rate & 0xFF);
+  uint8_t flow2 = (*(int*)flow_rate >> 8);
+  *flow_rate = 0;
 
   get_pressure();
   uint8_t pressure1 = (*pressure & 0xFF);

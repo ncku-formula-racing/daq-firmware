@@ -29,6 +29,7 @@
 /* USER CODE BEGIN Includes */
 #include "SEGGER_RTT.h"
 #include "Sensors.h"
+#include "commu.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -53,6 +54,8 @@
 // static int* DS18B20_Temp;
 // static uint16_t* result;
 // static int* isRxed;
+static uint32_t w;
+static uint32_t tim1 = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -63,6 +66,25 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim) {
+  w = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_1);
+  static float* flow_rate = NULL;
+  if(!flow_rate) flow_rate = fetch_flowrate();
+  
+  *flow_rate = (float)((10000/(w - tim1))/7.5)*1000;
+  // SEGGER_RTT_printf(0, "tick = %d\n", w);
+  // SEGGER_RTT_printf(0, "flow rate = %d L/min\n", (int)*flow_rate);
+  
+  tim1 = w;
+}
+
+void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan) {
+  static CAN_RxHeaderTypeDef rx_header;
+  static uint8_t rx_data[128];
+  HAL_CAN_GetRxMessage(hcan, CAN_RX_FIFO0, &rx_header, rx_data);
+
+   // can_receive_data(&rx_header, rx_data);
+}
 
 /* USER CODE END 0 */
 
@@ -102,13 +124,21 @@ int main(void)
   MX_TIM1_Init();
   MX_CAN_Init();
   /* USER CODE BEGIN 2 */
+  // warm up & print
   HAL_Delay(500);
   SEGGER_RTT_printf(0, "start\n");
+
+  can_init();
+  can_fetch_reference();
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1) {
+    HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
+    
+    can_send_data();
     
     HAL_Delay(500);
     /* USER CODE END WHILE */
