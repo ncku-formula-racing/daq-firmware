@@ -1,4 +1,5 @@
 #include "commu.h"
+#include "can_addr_def.h"
 
 extern CAN_HandleTypeDef hcan;
 extern UART_HandleTypeDef huart1;
@@ -10,15 +11,31 @@ static int* pressure;
 
 static uint32_t txmailbox;
 static CAN_TxHeaderTypeDef tx_handler = {
-    .StdId = 0xFF,
-    .ExtId = 0x01,
+    .StdId = CA_DAQ_DATA,
+    .ExtId = 0,
     .RTR = CAN_RTR_DATA,
     .IDE = CAN_ID_STD,
     .DLC = 8,
-    .TransmitGlobalTime = DISABLE,
+};
+
+static CAN_FilterTypeDef filterConfig = {
+    // .FilterActivation = ENABLE,
+    // .FilterBank = 0,
+    // .FilterFIFOAssignment = CAN_RX_FIFO0,
+    // .FilterIdHigh = CA_FAULT_SIGNAL,
+    // .FilterIdLow = 0,
+    // .FilterMaskIdHigh = CA_DASHBOARD_INFO,
+    // .FilterMaskIdLow = 0,
+    // .FilterMode = CAN_FILTERMODE_IDLIST,
+    // .FilterScale = CAN_FILTERSCALE_32BIT,
 };
 
 void can_init() {
+  HAL_CAN_Start(&hcan);
+  HAL_CAN_ConfigFilter(&hcan, &filterConfig);
+  HAL_CAN_ActivateNotification(&hcan, CAN_IT_RX_FIFO0_MSG_PENDING);
+
+  can_fetch_reference();
   init_ADC_DMA();
   flowrate_nvic_init();
   *flow_rate = 0;
@@ -61,12 +78,12 @@ void can_send_data() {
   }
 }
 
-void can_receive_data(CAN_RxHeaderTypeDef* rx_header, uint8_t* rx_data) {
-  uint8_t temp1 = rx_data[0];
-  uint8_t temp2 = rx_data[1];
-  uint16_t flow = (rx_data[2] << 8) | rx_data[3];
-  uint16_t pressure = (rx_data[4] << 8) | rx_data[5];
+// void can_receive_data(CAN_RxHeaderTypeDef* rx_header, uint8_t* rx_data) {
+//   uint8_t temp1 = rx_data[0];
+//   uint8_t temp2 = rx_data[1];
+//   uint16_t flow = (rx_data[2] << 8) | rx_data[3];
+//   uint16_t pressure = (rx_data[4] << 8) | rx_data[5];
 
-  SEGGER_RTT_printf(0, "temp1: %d, temp2: %d, flow: %d, pressure: %d\n", temp1,
-                    temp2, flow, pressure);
-}
+//   SEGGER_RTT_printf(0, "temp1: %d, temp2: %d, flow: %d, pressure: %d\n", temp1,
+//                     temp2, flow, pressure);
+// }

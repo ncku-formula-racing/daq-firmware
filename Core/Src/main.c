@@ -124,12 +124,11 @@ int main(void) {
   MX_TIM1_Init();
   MX_CAN_Init();
   /* USER CODE BEGIN 2 */
+
   // warm up & print
   HAL_Delay(500);
   SEGGER_RTT_printf(0, "start\n");
-
   can_init();
-  can_fetch_reference();
 
   /* USER CODE END 2 */
 
